@@ -130,3 +130,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = "users.User"
+
+
+import logging
+import os
+
+logging.basicConfig(filename="logger.log",
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    filemode='a')
+ 
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.DEBUG)
+
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
