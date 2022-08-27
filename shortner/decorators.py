@@ -1,4 +1,7 @@
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+
+from shortner.exceptions import NotFound
 
 logger = settings.LOGGER
 
@@ -8,6 +11,11 @@ def exception_handler(func):
 
         try:
             return func(*args, **kwargs)
+
+        except ObjectDoesNotExist as e:
+            logger.exception(e)
+            raise NotFound
+
         except Exception as e:
             logger.exception(e)
             raise e

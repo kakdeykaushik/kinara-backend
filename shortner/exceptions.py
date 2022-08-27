@@ -1,26 +1,36 @@
 from rest_framework.exceptions import APIException
+from rest_framework import status
 
 
-def http_401_unauthorized(message="Unauthorized"):
-    ex = APIException(code=401, detail=message)
-    return ex
 
 
-def http_403_forbidden(message="Forbidden."):
-    ex = APIException(code=403, detail=message)
-    return ex
+class Unauthorized(APIException):
+    status_code = status.HTTP_401_UNAUTHORIZED
 
 
-def http_404_not_found(message="Not Found."):
-    ex = APIException(code=404, detail=message)
-    return ex
+
+class Forbidden(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
 
 
-def http_409_conflict(message="Conflict"):
-    ex = APIException(code=409, detail=message)
-    return ex
 
 
-def http_500_internal_server_error(message="Internal Server Error."):
-    ex = APIException(code=500, detail=message)
-    return ex
+class BadRequest(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+
+
+class NotFound(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+
+
+
+class Conflict(APIException):
+    status_code = status.HTTP_409_CONFLICT
+
+
+
+class InternalServerError(APIException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+

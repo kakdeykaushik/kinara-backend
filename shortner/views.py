@@ -1,7 +1,5 @@
-import random
-
 from shortner.decorators import exception_handler
-from shortner.exceptions import http_403_forbidden
+from shortner.exceptions import Forbidden
 from .models import Url
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -12,12 +10,11 @@ from .serializers import UrlSerializer
 
 # Create your views here.
 
-CORPUS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 
 # Reidrect to main url
-@exception_handler
 @api_view(["GET"])
+@exception_handler
 def view_url(request, url):
     url_object = Url.objects.get(short_url=url, is_active=True)
     original_url = url_object.original_url
@@ -29,24 +26,16 @@ def view_url(request, url):
 
 
 # creates shortened url
-@exception_handler
 @api_view(["POST"])
+@exception_handler
 def shortner(request):
-    
-    while True:
-        mini_url = ""
-        for _ in range(7):
-            mini_url += random.choice(CORPUS)
-
-        if not Url.objects.filter(short_url=mini_url).exists():
-          break
-
+    print(request.headers)
 
     token = request.headers["Authorization"].split()[-1]
     token_object = Token.objects.get(key=token)
     
     original_url = request.POST.get("url")
-    new_url = Url(short_url=mini_url, original_url=original_url, owner=token_object.user)
+    new_url = Url(original_url=original_url, owner=token_object.user)
     new_url.save()
     
     serializer = UrlSerializer(new_url)
@@ -55,8 +44,8 @@ def shortner(request):
 
 
 # gives url detail to owner only
-@exception_handler
 @api_view(["GET"])
+@exception_handler
 def url_detail(request, url):
 
     token = request.headers["Authorization"].split()[-1]
@@ -70,14 +59,14 @@ def url_detail(request, url):
         serializer = UrlSerializer(url_object)
         return Response(serializer.data)
     else:
-        raise http_403_forbidden()
+        raise Forbidden
 
 
 
 
 # disable url - owner only
-@exception_handler
 @api_view(["GET"])
+@exception_handler
 def url_disable(request, url):
 
     token = request.headers["Authorization"].split()[-1]
@@ -94,13 +83,13 @@ def url_disable(request, url):
         serializer = UrlSerializer(url_object)
         return Response(serializer.data)
     else:
-        raise http_403_forbidden()
+        raise Forbidden
 
 
 
 # enable url - owner only
-@exception_handler
 @api_view(["GET"])
+@exception_handler
 def url_enable(request, url):
 
     token = request.headers["Authorization"].split()[-1]
@@ -117,15 +106,15 @@ def url_enable(request, url):
         serializer = UrlSerializer(url_object)
         return Response(serializer.data)
     else:
-        raise http_403_forbidden()
+        raise Forbidden
 
 
 
 
 
 # delete url - owner only
-@exception_handler
 @api_view(["GET"])
+@exception_handler
 def url_delete(request, url):
 
     token = request.headers["Authorization"].split()[-1]
@@ -140,4 +129,4 @@ def url_delete(request, url):
         url_object.delete()
         return Response({"message": f"{url} - deleted"})
     else:
-        raise http_403_forbidden()
+        raise Forbidden
