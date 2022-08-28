@@ -28,7 +28,8 @@ class Url(models.Model):
 
 
     def save(self, *args, **kwargs):
-        self.short_url = self.generate_short_url()
+        if self.pk is None:
+            self.short_url = self.generate_short_url()
         super().save(*args, **kwargs)
 
 

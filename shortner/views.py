@@ -29,7 +29,6 @@ def view_url(request, url):
 @api_view(["POST"])
 @exception_handler
 def shortner(request):
-    print(request.headers)
 
     token = request.headers["Authorization"].split()[-1]
     token_object = Token.objects.get(key=token)
@@ -53,13 +52,13 @@ def url_detail(request, url):
     
     user = token_object.user
 
-    url_object = Url.objects.get(short_url=url, is_active=True)
+    url_object = Url.objects.get(short_url=url)
 
     if user == url_object.owner:
         serializer = UrlSerializer(url_object)
         return Response(serializer.data)
     else:
-        raise Forbidden
+        raise Forbidden("Not Allowed")
 
 
 
@@ -83,7 +82,7 @@ def url_disable(request, url):
         serializer = UrlSerializer(url_object)
         return Response(serializer.data)
     else:
-        raise Forbidden
+        raise Forbidden("Not Allowed")
 
 
 
@@ -106,14 +105,14 @@ def url_enable(request, url):
         serializer = UrlSerializer(url_object)
         return Response(serializer.data)
     else:
-        raise Forbidden
+        raise Forbidden("Not Allowed")
 
 
 
 
 
 # delete url - owner only
-@api_view(["GET"])
+@api_view(["DELETE"])
 @exception_handler
 def url_delete(request, url):
 
@@ -129,4 +128,4 @@ def url_delete(request, url):
         url_object.delete()
         return Response({"message": f"{url} - deleted"})
     else:
-        raise Forbidden
+        raise Forbidden("Not Allowed")

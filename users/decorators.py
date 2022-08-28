@@ -15,11 +15,11 @@ def exception_handler(func):
         
         except ObjectDoesNotExist as e:
             logger.exception(e)
-            raise NotFound
+            raise NotFound("Not found")
 
         except IntegrityError as e:
             logger.exception(e)
-            raise BadRequest
+            raise BadRequest("Bad request")
         
         except Exception as e:
             logger.exception(e)

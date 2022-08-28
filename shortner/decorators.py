@@ -14,7 +14,7 @@ def exception_handler(func):
 
         except ObjectDoesNotExist as e:
             logger.exception(e)
-            raise NotFound
+            raise NotFound("Not found")
 
         except Exception as e:
             logger.exception(e)

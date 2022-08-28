@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g=_!y7g3$0$-$qxx%oz!4h9q5!j_eihttot75)(-tis8po#1-)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["http://127.0.0.1:3000", 'http://localhost:3000', "127.0.0.1:8000", "http://localhost:8000", "127.0.0.1"]
 
 
 # Application definition
@@ -40,12 +40,15 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
+
     'users',
     'shortner',
 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -144,3 +147,13 @@ LOGGER.setLevel(logging.WARNING)
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+'DEFAULT_PARSER_CLASSES': (
+    'rest_framework.parsers.FormParser',
+    'rest_framework.parsers.JSONParser',
+    'rest_framework.parsers.MultiPartParser'
+    )
+}
