@@ -1,1 +1,1 @@
-web: gunicorn skrate_ticketing.wsgi
+web: gunicorn url_shortner.wsgi
